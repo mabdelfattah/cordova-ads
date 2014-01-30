@@ -37,6 +37,9 @@
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAppEventDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADRequest.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADRequestError.h" />
+        <header-file src="src/ios/GADInterstitial.h" />
+        <header-file src="src/ios/GADInterstitialDelegate.h" />
+        <header-file src="src/ios/GADAdNetworkExtras.h" />
         
         <!-- Google AdMob 6.5.1 framework -->
         <source-file src="src/ios/GoogleAdMobAdsSdk/libGoogleAdMobAds.a" framework="true" />
