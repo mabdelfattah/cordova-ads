@@ -36,6 +36,7 @@
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADBannerViewDelegate.h" />     
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAppEventDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADRequest.h" />
+        <header-file src="src/ios/GoogleAdMobAdsSdk/GADRequestError.h" />
         
         <!-- Google AdMob 6.5.1 framework -->
         <source-file src="src/ios/GoogleAdMobAdsSdk/libGoogleAdMobAds.a" framework="true" />
