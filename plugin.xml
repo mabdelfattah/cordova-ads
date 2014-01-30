@@ -2,14 +2,14 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.postmedia.DFPPlugin"
-        version="0.0.2">
+        version="0.0.1">
     
     <name>DFPPlugin</name>
     <description>Google DFP Plugin</description>
     <license>MIT</license>
     
     <engines>
-        <engine name="cordova" version=">=3.3.0" />
+        <engine name="cordova" version=">=3.1.0" />
     </engines>
     <!---->
     <js-module src="www/DFPPlugin.js" name="DFPPlugin">
