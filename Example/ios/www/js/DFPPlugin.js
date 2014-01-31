@@ -2,7 +2,9 @@ var DFPPlugin =  {
     createBannerAd : function (options, successCallback, failureCallback) {
         var defaults = {
             'adUnitId': undefined,
-            'adSize': undefined
+            'adSize': undefined,
+            'tags': undefined,
+            'networkId': undefined
         };
         var requiredOptions = ['adUnitId', 'adSize'];
         
@@ -27,7 +29,7 @@ var DFPPlugin =  {
             failureCallback,
             'DFPPlugin',
             'cordovaCreateBannerAd',
-            [{adUnitId:defaults['adUnitId'], adSize:defaults['adSize']}]
+            [{adUnitId:defaults['adUnitId'], adSize:defaults['adSize'], tags:defaults['tags'], networkId: defaults['networkId']}]
         );
     },
     createInterstitialAd : function (options, successCallback, failureCallback) {
@@ -98,6 +100,27 @@ var DFPPlugin =  {
             'DFPPlugin',
             'cordovaRemoveAd',
             []
+        );
+
+    },
+    
+    debugMode: function(options, successCallback, failureCallback) {
+        var defaults = {
+            'debug': false
+        };
+        
+        for (var key in defaults) {
+            if (typeof options[key] !== 'undefined') {
+                defaults[key] = options[key];
+            }
+        }
+        
+        cordova.exec(
+            successCallback,
+            failureCallback,
+            'DFPPlugin',
+            'cordovaSetDebugMode',
+            [{debug: defaults['debug']}]
         );
 
     }

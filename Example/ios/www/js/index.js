@@ -38,7 +38,9 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         //app.addBanner();
-        app.addInterstitial();
+        app.removeAd();
+        app.addBanner();
+        app.debugMode();
         var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
@@ -67,7 +69,7 @@ var app = {
         var successCreateBannerView = function() {
             console.log("addBanner Success");
             DFPPlugin.requestAd({
-                'isTesting': true
+                'isTesting': false
             }, success, error);
         };
         
@@ -79,20 +81,27 @@ var app = {
         };
         
         var options = {
-            'adUnitId': '/6253334/dfp_example_ad/banner',
-            'adSize': 'BANNER'
+            //'adUnitId': '/6253334/dfp_example_ad/banner',
+            //'/3081/oc.ip/news/index'
+            //'adUnitId': '/3081/oc.ip/sports/hockey/nhl/senators-extra/story',
+            'adUnitId': '/3081/oc.ip/news/index',
+            'adSize': 'BIGBOX',
+            'tags': {'test': '1', 'blah': '2'},
+            'networkId': 'test.p'
         };
 
         DFPPlugin.createBannerAd(options, successCreateBannerView, error);
     },
     
     addInterstitial: function() {
-        var successCreateInterstitialView = function() { console.log("addInterstitial Success"); DFPPlugin.requestAd({'isTesting': true}, success, error); };
+        var successCreateInterstitialView = function() { console.log("addInterstitial Success"); DFPPlugin.requestAd({'isTesting': false}, success, error); };
         var success = function() { console.log("requestAd Success"); };
         var error = function(message) { console.log("Oopsie! " + message); };
     
         var options = {
-            'adUnitId': '/6253334/dfp_example_ad/banner',
+            //'adUnitId': '/6253334/dfp_example_ad/banner',
+            //'adUnitId': '/6253334/dfp_example_ad/interstitial'
+            'adUnitId': '/3081/oc.ip/news/index'
         }
         DFPPlugin.createInterstitialAd(options, successCreateInterstitialView, error);
     },
@@ -104,6 +113,14 @@ var app = {
         
         var options = {};
         
-        DFPPlugin.removeAd(options, successRemoveAd, error);
+        DFPPlugin.removeAd();
+    },
+    
+    debugMode: function() {
+        var successDebug = function() { console.log("debug Success"); };
+        
+        var error = function(message) { console.log("debug failed! " + message); };
+        
+        DFPPlugin.debugMode({'debug': true}, successDebug, error);
     }
 };

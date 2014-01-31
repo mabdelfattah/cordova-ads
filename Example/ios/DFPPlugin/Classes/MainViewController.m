@@ -75,24 +75,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    // Create a view of the standard size at the top of the screen.
-    // Available AdSize constants are explained in GADAdSize.h.
-    //DFPBannerView *dfpBannerView = [DFPPlugin ]
-    
-    //dfpBannerView_.adUnitID = kSampleAdUnitID;
-    
-    
-    // Set the delegate to listen for GADBannerViewDelegate events.
-    //dfpBannerView_.delegate = self;
-    
-    // Let the runtime know which UIViewController to restore after taking
-    // the user wherever the ad goes and add it to the view hierarchy.
-    //dfpBannerView_.rootViewController = self;
-    //[dfpBannerView_ loadRequest:[GADRequest request]];
-    //[self.webView addSubview:dfpBannerView_];
-    
-    //dfpBannerView_.
 }
 
 - (void)viewDidUnload
