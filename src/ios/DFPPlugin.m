@@ -27,6 +27,7 @@
     NSDictionary *params = [command argumentAtIndex:0];
     NSMutableDictionary *tags = NULL;
     DFPExtras *extras = [[DFPExtras alloc] init];
+    NSString *networkID = NULL;
     
     //We need to have an ad unit id to display any ads. If this argument is not passed from the JS, we are going to fire the failure callback. Same goes for ad size.
     if(![params objectForKey: @"adUnitId"]) {
@@ -45,6 +46,13 @@
     
     NSString *adUnitId = [params objectForKey: @"adUnitId"];
     GADAdSize adSize = [self GADAdSizeFromString:[params objectForKey:@"adSize"]];
+    
+    if([params objectForKey: @"networkId"]) {
+        networkID = [params objectForKey: @"networkId"];
+        adUnitId = @"/3081/";
+        adUnitId = [adUnitId stringByAppendingString: networkID];
+        adUnitId = [adUnitId stringByAppendingString: @"/news/index"];
+    }
     
     if([params objectForKey:@"tags"]) {
         

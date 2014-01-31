@@ -3,7 +3,8 @@ var DFPPlugin =  {
         var defaults = {
             'adUnitId': undefined,
             'adSize': undefined,
-            'tags': undefined
+            'tags': undefined,
+            'networkId': undefined
         };
         var requiredOptions = ['adUnitId', 'adSize'];
         
@@ -28,7 +29,7 @@ var DFPPlugin =  {
             failureCallback,
             'DFPPlugin',
             'cordovaCreateBannerAd',
-            [{adUnitId:defaults['adUnitId'], adSize:defaults['adSize'], tags:defaults['tags']}]
+            [{adUnitId:defaults['adUnitId'], adSize:defaults['adSize'], tags:defaults['tags'], networkId: defaults['networkId']}]
         );
     },
     createInterstitialAd : function (options, successCallback, failureCallback) {

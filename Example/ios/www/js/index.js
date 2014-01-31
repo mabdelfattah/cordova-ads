@@ -86,7 +86,8 @@ var app = {
             //'adUnitId': '/3081/oc.ip/sports/hockey/nhl/senators-extra/story',
             'adUnitId': '/3081/oc.ip/news/index',
             'adSize': 'BIGBOX',
-            'tags': {'test': '1', 'blah': '2'}
+            'tags': {'test': '1', 'blah': '2'},
+            'networkId': 'test.p'
         };
 
         DFPPlugin.createBannerAd(options, successCreateBannerView, error);
