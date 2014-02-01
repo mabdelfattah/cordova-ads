@@ -40,8 +40,8 @@
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADInterstitial.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADInterstitialDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAdNetworkExtras.h" />
-        <header-file src="src/ios/GoogleAdMobAdsSdk/DFPInterstitial.h" />
-        <header-file src="src/ios/GoogleAdMobAdsSdk/DFPExtras.h" />
+        <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPInterstitial.h" />
+        <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPExtras.h" />
         
         <!-- Google AdMob 6.5.1 framework -->
         <source-file src="src/ios/GoogleAdMobAdsSdk/libGoogleAdMobAds.a" framework="true" />
