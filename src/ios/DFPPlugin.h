@@ -34,6 +34,8 @@
 - (void)interstitialDidReceiveAd:(DFPInterstitial *)interstitial;
 - (void)interstitial:(DFPInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error;
 - (void)adViewWillPresentScreen:(GADBannerView *)adView;
+- (void)adViewDidReceiveAd:(DFPBannerView *)bannerView;
+- (void)adView:(DFPBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error;
 - (void)dealloc;
 
 @end

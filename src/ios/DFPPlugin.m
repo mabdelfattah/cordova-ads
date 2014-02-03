@@ -55,7 +55,6 @@
     }
     
     if([params objectForKey:@"tags"]) {
-        
         tags = [[NSMutableDictionary alloc] initWithDictionary:[params objectForKey:@"tags"]];
         
         extras.additionalParameters = [NSDictionary dictionaryWithDictionary:tags];
@@ -287,6 +286,14 @@
 
 - (void)adView:(DFPBannerView *)banner didReceiveAppEvent:(NSString *)name withInfo:(NSString *)info {
     NSLog(@"banner view event: %@", name);
+}
+
+- (void)adViewDidReceiveAd:(DFPBannerView *)bannerView {
+    NSLog(@"adViewDidReceiveAd");
+}
+
+- (void)adView:(DFPBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error {
+    NSLog(@"didFailToReceiveAdWithError: %@", error.description);
 }
 
 - (void)interstitial:(DFPInterstitial *)interstitial didReceiveAppEvent:(NSString *)name withInfo:(NSString *)info {
