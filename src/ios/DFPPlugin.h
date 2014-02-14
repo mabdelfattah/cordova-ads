@@ -21,21 +21,30 @@
 @property (strong, nonatomic)DFPInterstitial *dfpInterstitialView;
 @property BOOL debugMode;
 
+//These methods are what can be called from the JavaScript plugin.
 - (void)cordovaCreateBannerAd:(CDVInvokedUrlCommand *)command;
 - (void)cordovaCreateInterstitialAd:(CDVInvokedUrlCommand *)command;
 - (void)cordovaSetDebugMode:(CDVInvokedUrlCommand *)command;
-- (GADAdSize)GADAdSizeFromString:(NSString *)string;
-- (void)createBannerAdView:(NSString *)adUnitID adSize:(GADAdSize)adSize;
+- (void)cordovaRemoveAd: (CDVInvokedUrlCommand *)command;
+
+//DFP Ad Rendering Methods
+- (void)createBannerAdView:(NSString *)adUnitID adSize:(GADAdSize)adSize backgroundColor:(NSString *)backgroundColor;
 - (void)createInterstitialAdView:(NSString *)adUnitID;
 - (void)resizeViews;
-- (void)cordovaRemoveAd: (CDVInvokedUrlCommand *)command;
+- (void)removeAds;
+
+//DFP Ad Events
 - (void)adView:(DFPBannerView *)banner didReceiveAppEvent:(NSString *)name withInfo:(NSString *)info;
 - (void)interstitial:(DFPInterstitial *)interstitial didReceiveAppEvent:(NSString *)name withInfo:(NSString *)info;
 - (void)interstitialDidReceiveAd:(DFPInterstitial *)interstitial;
 - (void)interstitial:(DFPInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error;
 - (void)adViewWillPresentScreen:(GADBannerView *)adView;
-- (void)adViewDidReceiveAd:(DFPBannerView *)bannerView;
-- (void)adView:(DFPBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error;
+
 - (void)dealloc;
+
+//Helper methods
+- (GADAdSize)GADAdSizeFromString:(NSString *)string;
+- (unsigned int)intFromHexString:(NSString *)hexStr;
+- (UIColor *)getUIColorObjectFromHexString:(NSString *)hexStr alpha:(CGFloat)alpha;
 
 @end
