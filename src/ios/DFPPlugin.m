@@ -21,6 +21,8 @@
     return self;
 }
 
+
+#pragma mark CORDOVA INTERFACE METHODS
 - (void)cordovaCreateBannerAd: (CDVInvokedUrlCommand *)command {
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
@@ -28,17 +30,16 @@
     NSMutableDictionary *tags = NULL;
     DFPExtras *extras = [[DFPExtras alloc] init];
     NSString *networkID = NULL;
+    NSString *backgroundColor = NULL;
     
     //We need to have an ad unit id to display any ads. If this argument is not passed from the JS, we are going to fire the failure callback. Same goes for ad size.
     if(![params objectForKey: @"adUnitId"]) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: "
-                                         @"Invalid Ad Unit ID"];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: Invalid Ad Unit ID"];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         return;
     } else if(![params objectForKey: @"adSize"]) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: "
-                                         @"Invalid Ad Size"];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: Invalid Ad Size"];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         return;
@@ -54,14 +55,38 @@
         adUnitId = [adUnitId stringByAppendingString: @"/news/index"];
     }
     
+    if([params objectForKey:@"backgroundColor"]) {
+        backgroundColor = [params objectForKey:@"backgroundColor"];
+    }
+    
     if([params objectForKey:@"tags"]) {
+        
         tags = [[NSMutableDictionary alloc] initWithDictionary:[params objectForKey:@"tags"]];
         
         extras.additionalParameters = [NSDictionary dictionaryWithDictionary:tags];
         self.dfpBannerViewExtras = extras;
-    }
+        
+        //Set supported sizes if tags contains 'sz' key
+        //TODO: Add support for passing array of compatible sizes
+        /*NSString *sizeTag = [tags objectForKey:@"sz"];
+        if(sizeTag) {
+            NSArray *dimensions = [sizeTag componentsSeparatedByString:@","];
+            NSMutableArray *validSizes = [NSMutableArray array];
+            
+            int xSize = [[dimensions objectAtIndex:0] intValue];
+            int ySize = [[dimensions objectAtIndex:1] intValue];
+            
+            GADAdSize adSize = GADAdSizeFromCGSize(CGSizeMake(xSize, ySize));
+            GADAdSize standardBanner = kGADAdSizeBanner;
+            [validSizes addObject:[NSValue valueWithBytes:&standardBanner objCType:@encode(GADAdSize)]];
+            [validSizes addObject:[NSValue valueWithBytes:&adSize objCType:@encode(GADAdSize)]];
+            
+            self.dfpBannerView.validAdSizes = validSizes;
 
-    [self createBannerAdView:adUnitId adSize:adSize];
+        }*/
+    }
+    
+    [self createBannerAdView:adUnitId adSize:adSize backgroundColor:backgroundColor];
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
@@ -75,15 +100,14 @@
     
     //We need to have an ad unit id to display any ads. If this argument is not passed from the JS, we are going to fire the failure callback. Same goes for ad size.
     if(![params objectForKey: @"adUnitId"]) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: "
-                                         @"Invalid Ad Unit ID"];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: Invalid Ad Unit ID"];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         return;
     }
     
     NSString *adUnitId = [params objectForKey: @"adUnitId"];
-
+    
     [self createInterstitialAdView:adUnitId];
     
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -98,16 +122,15 @@
     NSString *callbackId = command.callbackId;
     
     if (!self.dfpBannerView && !self.dfpInterstitialView) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: "
-                                         @"No ad view exists"];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"DFPPlugin: No ad view exists"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         return;
     }
     
     BOOL testing = [[params objectForKey:@"isTesting"] boolValue];
-    
     if(testing) {
-        request.testDevices = [NSArray arrayWithObjects: GAD_SIMULATOR_ID, nil];
+        DFPExtras *extras = [[DFPExtras alloc] init];
+        extras.additionalParameters = [NSDictionary dictionaryWithObjectsAndKeys: @"yes", @"test", nil];
     }
     
     // Add the ad to the main container view, and resize the webview to make space
@@ -141,23 +164,28 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (GADAdSize)GADAdSizeFromString:(NSString *)string {
-    //TODO: Add support for other sizes
-    if ([string isEqualToString:@"BANNER"]) {
-        return kGADAdSizeBanner;
-    } else if([string isEqualToString:@"BIGBOX"]) {
-        return kGADAdSizeMediumRectangle;
-    } else {
-        return kGADAdSizeInvalid;
-    }
+- (void)cordovaRemoveAd:(CDVInvokedUrlCommand *)command {
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    
+    [self removeAds];
+    
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)createBannerAdView:(NSString *)adUnitID adSize:(GADAdSize)adSize {
+
+#pragma mark BANNER RENDERING METHODS
+- (void)createBannerAdView:(NSString *)adUnitID adSize:(GADAdSize)adSize backgroundColor:(NSString *)backgroundColor {
     self.dfpBannerView = [[DFPBannerView alloc] initWithAdSize:adSize];
     self.dfpBannerView.adUnitID = adUnitID;
     self.dfpBannerView.delegate = self;
     self.dfpBannerView.rootViewController = self.viewController;
     [self.dfpBannerView setAppEventDelegate:self];
+    
+    if([backgroundColor length] > 0) {
+        self.dfpBannerView.backgroundColor = [self getUIColorObjectFromHexString:backgroundColor alpha: 1.0f];
+    }
 }
 
 - (void)createInterstitialAdView:(NSString *)adUnitID {
@@ -203,7 +231,7 @@
     self.dfpBannerView.frame = frame;
     
     if (UIInterfaceOrientationIsLandscape(currentOrientation)) {
-    
+        
         // The super view's frame hasn't been updated so use its width
         // as the height.
         webViewFrame.size.height = superViewFrame.size.width - bannerViewFrame.size.height;
@@ -211,9 +239,7 @@
     self.webView.frame = webViewFrame;
 }
 
-- (void)cordovaRemoveAd:(CDVInvokedUrlCommand *)command {
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
+- (void)removeAds {
     
     if(self.dfpBannerView) {
         
@@ -236,10 +262,20 @@
         self.dfpInterstitialView = nil;
     }
     
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
+- (void)dealloc {
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter]
+     removeObserver:self
+     name:UIDeviceOrientationDidChangeNotification
+     object:nil];
+    
+    [self removeAds];
+}
+
+
+#pragma mark DFP AD EVENTS
 - (void)adViewWillPresentScreen:(GADBannerView *)adView {
     if(self.debugMode) {
         NSString *adUnitId = @"Ad Unit ID: ";
@@ -255,7 +291,7 @@
         NSString *tags = NULL;
         
         if(self.dfpBannerViewExtras) {
-            tags = [self.dfpBannerViewExtras.additionalParameters description];
+            tags = [self.dfpBannerViewExtras.additionalParameters descriptionInStringsFileFormat];
             adUnitId = [adUnitId stringByAppendingString:tags];
         }
         
@@ -264,24 +300,13 @@
     }
 }
 
-- (void)dealloc {
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter]
-        removeObserver:self
-        name:UIDeviceOrientationDidChangeNotification
-        object:nil];
-
-    self.dfpBannerView.delegate = nil;
-    self.dfpInterstitialView.delegate = nil;
-}
-
 - (void)interstitialDidReceiveAd:(DFPInterstitial *)interstitial {
     NSLog(@"Received Ad");
     [self.dfpInterstitialView presentFromRootViewController:self.viewController];
 }
 
 - (void)interstitial:(DFPInterstitial *)interstitial didFailToReceiveAdWithError:(GADRequestError *)error {
-    NSLog(@"Failed to load interstitial");
+    NSLog(@"Failed to load interstitial %@", error.description);
 }
 
 - (void)adView:(DFPBannerView *)banner didReceiveAppEvent:(NSString *)name withInfo:(NSString *)info {
@@ -300,6 +325,48 @@
     NSLog(@"interstitial view event: %@", name);
 }
 
+#pragma mark HELPERS
+- (GADAdSize)GADAdSizeFromString:(NSString *)string {
+    //TODO: Add support for other sizes
+    if ([string isEqualToString:@"BANNER"]) {
+        return kGADAdSizeBanner;
+    } else if([string isEqualToString:@"BIGBOX"]) {
+        return kGADAdSizeMediumRectangle;
+    } else {
+        return kGADAdSizeInvalid;
+    }
+}
+
+- (UIColor *)getUIColorObjectFromHexString:(NSString *)hexStr alpha:(CGFloat)alpha
+{
+    // Convert hex string to an integer
+    unsigned int hexint = [self intFromHexString:hexStr];
+    
+    // Create color object, specifying alpha as well
+    UIColor *color =
+    [UIColor colorWithRed:((CGFloat) ((hexint & 0xFF0000) >> 16))/255
+                    green:((CGFloat) ((hexint & 0xFF00) >> 8))/255
+                     blue:((CGFloat) (hexint & 0xFF))/255
+                    alpha:alpha];
+    
+    return color;
+}
+
+- (unsigned int)intFromHexString:(NSString *)hexStr
+{
+    unsigned int hexInt = 0;
+    
+    // Create scanner
+    NSScanner *scanner = [NSScanner scannerWithString:hexStr];
+    
+    // Tell scanner to skip the # character
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@"#"]];
+    
+    // Scan hex value
+    [scanner scanHexInt:&hexInt];
+    
+    return hexInt;
+}
 
 
 @end
