@@ -214,6 +214,7 @@ public class DFPPlugin extends CordovaPlugin {
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
 				if (adSize == AdSize.BANNER) {
+					adView.setPadding(0, 1, 0, 0);
 					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 				} else {
 
