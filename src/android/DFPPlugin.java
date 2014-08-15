@@ -1,9 +1,11 @@
 /**
  * Plugin to ser DFP Ads on mobile devices
- * 
+ *
  * author: waheed ashraf
  * Created on: March 3rd, 2014
- * 
+ *
+ * Updated by: Mahmoud Abdel-Fattah
+ * August 15th, 2014
  */
 
 package com.postmedia.pheme;
@@ -44,12 +46,12 @@ public class DFPPlugin extends CordovaPlugin {
 	private int backgroundColor;
 	private String publisherId;
 	private JSONObject extras;
-	
+
 	/**
 	 * This is the main method for the DFPAds plugin. All API calls go through
 	 * here. This method determines the action, and executes the appropriate
 	 * call.
-	 * 
+	 *
 	 * @param action
 	 *            The action that the plugin should execute.
 	 * @param inputs
@@ -77,12 +79,12 @@ public class DFPPlugin extends CordovaPlugin {
 
 		return true;
 	}
-	
+
 	/**
 	 * Parses the create banner view input parameters and runs the create ad
 	 * view action on the UI thread. If this request is successful, the
 	 * developer should make the requestAd call to request an ad for the banner.
-	 * 
+	 *
 	 * @param inputs
 	 *            The JSONArray representing input parameters. This function
 	 *            expects the first object in the array to be a JSONObject with
@@ -99,7 +101,13 @@ public class DFPPlugin extends CordovaPlugin {
 			publisherId = options.getString("adUnitId");
 			size = options.getString("adSize");
 			extras = options.getJSONObject("tags");
-			backgroundColor = Color.parseColor(options.getString("backgroundColor"));
+
+			if (options.has("backgroundColor")) {
+        backgroundColor = Color.parseColor(options.getString("backgroundColor"));
+      } else {
+        backgroundColor = backgroundColor;
+      }
+
 		} catch (JSONException exception) {
 			Log.w("AdDFP", String.format("Got JSON Exception: %s", exception.getMessage()));
 			return new PluginResult(Status.JSON_EXCEPTION);
@@ -164,8 +172,8 @@ public class DFPPlugin extends CordovaPlugin {
 			webView.loadUrl("javascript:cordova.fireDocumentEvent('onAdOpened');");
 		}
 	}
-	
-	/** 
+
+	/**
 	 * This method displays debug information in a dialog box.
 	 */
 	private void displayDebugInfo(){
@@ -174,7 +182,7 @@ public class DFPPlugin extends CordovaPlugin {
 		StringBuilder message = new StringBuilder();
 		message.append(String.format("Ad Unit ID: %s\n", publisherId));
 		message.append(String.format("Ad Size:  {%d, %d}\n", adSize.getWidth(), adSize.getHeight()));
-		
+
 		Iterator<?> keys = extras.keys();
         while( keys.hasNext() ){
             String key = (String)keys.next();
@@ -191,7 +199,7 @@ public class DFPPlugin extends CordovaPlugin {
 		});
 		dialog.show();
 	}
-	
+
 	/** Runnable for the createAdView action. */
 	private class CreateAdView extends AdDfpRunnable {
 		public CreateAdView(String pubId, AdSize size, int bg) {
@@ -200,7 +208,7 @@ public class DFPPlugin extends CordovaPlugin {
 			backgroundColor = bg;
 			result = new PluginResult(Status.NO_RESULT);
 		}
-		
+
 		@Override
 		public void run() {
 			if (adSize == null) {
@@ -228,7 +236,7 @@ public class DFPPlugin extends CordovaPlugin {
 				adViewLayer.addView(adView, layoutParams);
 				ViewGroup.LayoutParams outerLayout = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 				Bundle bundle = new Bundle();
-				
+
 				Iterator<?> keys = extras.keys();
 
 		        while( keys.hasNext() ){
@@ -236,7 +244,7 @@ public class DFPPlugin extends CordovaPlugin {
 		            try {
 						bundle.putString(key, extras.getString(key));
 					} catch (JSONException e) {
-						
+
 					}
 		        }
 				cordova.getActivity().addContentView(adViewLayer, outerLayout);
@@ -250,7 +258,7 @@ public class DFPPlugin extends CordovaPlugin {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * Removes the ad layer from application and destroy any ad within that layerview.
 	 *
 	 */
@@ -278,7 +286,7 @@ public class DFPPlugin extends CordovaPlugin {
 	/**
 	 * Gets an AdSize object from the string size passed in from JavaScript.
 	 * Returns null if an improper string is provided.
-	 * 
+	 *
 	 * @param size
 	 *            The string size representing an ad format constant.
 	 * @return An AdSize object used to create a banner.
