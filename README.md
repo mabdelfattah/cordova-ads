@@ -1,3 +1,8 @@
+I had some problems with the original plugin and android 4.1.x, so I made this fork and changed a couple of lines in the DFPPlugin.java.
+
+I also updated the Google Mobile SDK files for iOS.
+
+
 cordova-ads
 ===========
 
