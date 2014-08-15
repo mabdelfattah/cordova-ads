@@ -113,7 +113,9 @@ public class DFPPlugin extends CordovaPlugin {
 		synchronized (runnable) {
 			cordova.getActivity().runOnUiThread(runnable);
 			try {
-				runnable.wait();
+				if (runnable.getPluginResult() == null) {
+					runnable.wait();
+				}
 			} catch (InterruptedException exception) {
 				Log.w("AdDFP", String.format("Interrupted Exception: %s", exception.getMessage()));
 				return new PluginResult(Status.ERROR, "Interruption occurred when running on UI thread");
