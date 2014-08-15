@@ -2,12 +2,12 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.postmedia.DFPPlugin"
-        version="0.0.2">
-    
+        version="0.0.3">
+
     <name>DFPPlugin</name>
     <description>Google DFP Plugin</description>
     <license>MIT</license>
-    
+
     <engines>
         <engine name="cordova" version=">=2.9.0" />
     </engines>
@@ -27,8 +27,9 @@
                 android:value="@integer/google_play_services_version"/>
         </config-file>
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" 
-                android:name="com.google.android.gms.ads.AdActivity" />
+            <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+                android:name="com.google.android.gms.ads.AdActivity"
+                android:theme="@android:style/Theme.Translucent" />
           </config-file>
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.INTERNET"/>
@@ -43,17 +44,17 @@
                 <param name="ios-package" value="DFPPlugin" />
             </feature>
         </config-file>
-        
+
         <header-file src="src/ios/DFPPlugin.h" />
         <source-file src="src/ios/DFPPlugin.m" />
-        
+
         <!-- Google AdMob header files -->
         <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPBannerView.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAdMobExtras.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAdSize.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAdSizeDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADBannerView.h" />
-        <header-file src="src/ios/GoogleAdMobAdsSdk/GADBannerViewDelegate.h" />     
+        <header-file src="src/ios/GoogleAdMobAdsSdk/GADBannerViewDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAppEventDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADRequest.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADRequestError.h" />
@@ -62,10 +63,10 @@
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAdNetworkExtras.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPInterstitial.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPExtras.h" />
-        
+
         <!-- Google AdMob 6.5.1 framework -->
         <source-file src="src/ios/GoogleAdMobAdsSdk/libGoogleAdMobAds.a" framework="true" />
-        
+
         <!-- iOS development frameworks need by Google AdMob 6.5.1 framework -->
         <framework src="Foundation.framework" />
         <framework src="AdSupport.framework" />
