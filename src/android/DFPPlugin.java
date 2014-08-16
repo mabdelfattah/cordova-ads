@@ -95,7 +95,7 @@ public class DFPPlugin extends CordovaPlugin {
 	private PluginResult executeCreateAdView(JSONArray inputs) {
 		String publisherId;
 		String size;
-		int backgroundColor = Color.BLACK;
+		int backgroundColor = Color.TRANSPARENT;
 		try {
 			JSONObject options = inputs.getJSONObject(0);
 			publisherId = options.getString("adUnitId");
