@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.postmedia.DFPPlugin"
-        version="0.0.3">
+        version="0.0.4">
 
     <name>DFPPlugin</name>
     <description>Google DFP Plugin</description>
@@ -61,6 +61,8 @@
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADInterstitial.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADInterstitialDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/GADAdNetworkExtras.h" />
+        <header-file src="src/ios/GoogleAdMobAdsSdk/GADModules.h" />
+        <header-file src="src/ios/GoogleAdMobAdsSdk/GADInAppPurchaseDelegate.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPInterstitial.h" />
         <header-file src="src/ios/GoogleAdMobAdsSdk/Add-ons/DoubleClick/DFPExtras.h" />
 
